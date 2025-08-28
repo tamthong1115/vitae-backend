@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class VitaeBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(VitaeBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(VitaeBackendApplication.class, args);
+    }
 
 }

@@ -34,21 +34,17 @@ public class User {
     @Column(name = "full_name", length = 100)
     private String fullName;
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "user_status")
-    private UserStatus status = UserStatus.active;
+    private UserStatus status = UserStatus.ACTIVE;
 
-    @Builder.Default
     @Column(name = "is_verified", nullable = false)
-    private boolean isVerified = false;
+    private boolean isVerified;
 
-    @Builder.Default
     @Column(name = "two_factor_enabled", nullable = false)
-    private boolean twoFactorEnabled = false;
+    private boolean twoFactorEnabled;
 
-    @Lob
-    @Column(name = "totp_secret_encrypted")
+    @Column(name = "totp_secret_encrypted", columnDefinition = "text")
     private String totpSecretEncrypted;
 
     @Column(name = "last_login_at")
@@ -65,8 +61,6 @@ public class User {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    public enum UserStatus {
-        active, deactivated, banned
-    }
+    public enum UserStatus {ACTIVE, DEACTIVATED, BANNED}
 }
 

@@ -7,31 +7,34 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "user_blocks")
 public class UserBlock {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id")
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "blocked_user_id", nullable = false)
     private User blockedUser;
 
-    @Lob
-    @Column(name = "reason")
+
+    @Column(name = "reason", columnDefinition = "text")
     private String reason;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+
+    @Column(name = "created_at")
     private OffsetDateTime createdAt;
 }

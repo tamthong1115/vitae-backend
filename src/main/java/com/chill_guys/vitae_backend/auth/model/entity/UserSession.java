@@ -8,8 +8,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "sessions")
@@ -24,15 +26,10 @@ public class UserSession {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Lưu HASH của refresh token (không lưu token raw)
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "refresh_token_hash", nullable = false)
+    @Column(name = "refresh_token_hash", nullable = false, columnDefinition = "text")
     private String refreshTokenHash;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "user_agent")
+    @Column(name = "user_agent", columnDefinition = "text")
     private String userAgent;
 
     @Column(name = "ip")
@@ -50,12 +47,9 @@ public class UserSession {
     @Column(name = "revoked_at")
     private OffsetDateTime revokedAt;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
     @Column(name = "revoked_reason")
     private String revokedReason;
 
-    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 }

@@ -16,30 +16,33 @@ import java.util.UUID;
 @Entity
 @Table(name = "friendships")
 public class Friendship {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id")
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "friend_id", nullable = false)
     private User friend;
+
 
     @Column(name = "accepted_at")
     private OffsetDateTime acceptedAt;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+
+    @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
+
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
+
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;

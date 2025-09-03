@@ -33,26 +33,21 @@ public class OauthAccount {
     @Column(name = "provider_user_id", nullable = false, length = 255)
     private String providerUserId;
 
-    @Lob
-    @Column(name = "access_token")
+    @Column(name = "access_token", columnDefinition = "text")
     private String accessToken;
 
-    @Lob
-    @Column(name = "refresh_token")
+    @Column(name = "refresh_token", columnDefinition = "text")
     private String refreshToken;
 
     @Column(name = "token_expires_at")
     private OffsetDateTime tokenExpiresAt;
 
-    @Lob
-    @Column(name = "scope")
+    @Column(name = "scope", columnDefinition = "text")
     private String scope;
 
-    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 }

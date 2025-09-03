@@ -1,9 +1,8 @@
 package com.chill_guys.vitae_backend.user.model.entity;
 
+import com.chill_guys.vitae_backend.media.model.entity.Media;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -23,19 +22,20 @@ public class UserProfile {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Lob
-    @Column(name = "bio")
+    @Column(name = "bio", columnDefinition = "text")
     private String bio;
 
-    @Column(name = "profile_picture_id")
-    private UUID profilePictureId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_picture_id")
+    private Media profilePicture;
 
-    @Column(name = "cover_photo_id")
-    private UUID coverPhotoId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cover_photo_id")
+    private Media coverPhoto;
 
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
@@ -61,11 +61,9 @@ public class UserProfile {
     @Column(name = "gender", length = 20)
     private String gender;
 
-    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 }

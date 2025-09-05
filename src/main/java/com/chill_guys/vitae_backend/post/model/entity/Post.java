@@ -56,4 +56,12 @@ public class Post {
 
     @Column(name = "comments_count")
     private Integer commentsCount;
+
+    public enum Visibility {
+        PUBLIC,
+        PRIVATE,
+        FRIENDS,
+        CUSTOM
+    }
+
 }

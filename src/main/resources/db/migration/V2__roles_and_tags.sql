@@ -38,9 +38,9 @@ CREATE INDEX IF NOT EXISTS idx_user_roles_user ON user_roles(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_roles_role ON user_roles(role_id);
 
 INSERT INTO roles (name, description) VALUES
-                                          ('admin','Full administrative privileges'),
-                                          ('moderator','Moderation tools on community content'),
-                                          ('user','Default member')
+                                          ('ADMIN','Full administrative privileges'),
+                                          ('MODERATOR','Moderation tools on community content'),
+                                          ('USER','Default member')
 ON CONFLICT (name) DO NOTHING;
 
 -- TAGS (generic, covers spoiler/nsfw/flair/topics)

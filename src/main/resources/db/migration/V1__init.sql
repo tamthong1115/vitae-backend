@@ -1,64 +1,65 @@
 CREATE TYPE "user_status" AS ENUM (
-  'active',
-  'deactivated',
-  'banned'
-);
+    'ACTIVE',
+    'DEACTIVATED',
+    'BANNED'
+    );
 
 CREATE TYPE "friendship_status" AS ENUM (
-  'pending',
-  'accepted',
-  'declined'
-);
+    'PENDING',
+    'ACCEPTED',
+    'DECLINED'
+    );
 
 CREATE TYPE "visibility" AS ENUM (
-  'public',
-  'friends',
-  'private',
-  'custom'
-);
+    'PUBLIC',
+    'FRIENDS',
+    'PRIVATE',
+    'CUSTOM'
+    );
 
 CREATE TYPE "reaction_type" AS ENUM (
-  'like',
-  'love',
-  'haha',
-  'wow',
-  'sad',
-  'angry',
-  'care'
-);
+    'LIKE',
+    'LOVE',
+    'HAHA',
+    'WOW',
+    'SAD',
+    'ANGRY',
+    'CARE'
+    );
 
 CREATE TYPE "media_type" AS ENUM (
-  'image',
-  'video',
-  'audio',
-  'file'
-);
+    'IMAGE',
+    'VIDEO',
+    'AUDIO',
+    'FILE'
+    );
 
 CREATE TYPE "notification_type" AS ENUM (
-  'friend_request',
-  'friend_accept',
-  'post_reaction',
-  'comment',
-  'comment_reaction',
-  'mention',
-  'follow',
-  'system'
-);
+    'FRIEND_REQUEST',
+    'FRIEND_ACCEPT',
+    'POST_REACTION',
+    'COMMENT',
+    'COMMENT_REACTION',
+    'MENTION',
+    'FOLLOW',
+    'SYSTEM'
+    );
 
 CREATE TYPE "friend_request_status" AS ENUM (
-  'pending',
-  'declined',
-  'cancelled',
-  'expired'
-);
+    'PENDING',
+    'DECLINED',
+    'CANCELLED',
+    'EXPIRED'
+    );
+
 
 CREATE TABLE IF NOT EXISTS "users" (
                          "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
-                         "account_name" varchar(50) NOT NULL,
+                         "account_name" varchar(50),
                          "email" varchar(255) NOT NULL,
                          "password_hash" varchar(255),
                          "full_name" varchar(100),
-                         "status" user_status NOT NULL DEFAULT 'active',
+                         "status" user_status NOT NULL DEFAULT 'ACTIVE',
                          "is_verified" bool DEFAULT false,
                          "two_factor_enabled" bool DEFAULT false,
                          "totp_secret_encrypted" text,
@@ -117,7 +118,7 @@ CREATE TABLE IF NOT EXISTS "friend_requests" (
                                    "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
                                    "requester_id" uuid NOT NULL,
                                    "addressee_id" uuid NOT NULL,
-                                   "status" friend_request_status NOT NULL DEFAULT 'pending',
+                                   "status" friend_request_status NOT NULL DEFAULT 'PENDING',
                                    "message" varchar(200),
                                    "seen_at" timestamptz,
                                    "responded_at" timestamptz,
@@ -164,7 +165,7 @@ CREATE TABLE IF NOT EXISTS "posts" (
                          "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
                          "user_id" uuid NOT NULL,
                          "content" text,
-                         "visibility" visibility DEFAULT 'public',
+                         "visibility" visibility DEFAULT 'PUBLIC',
                          "repost_of_post_id" uuid,
                          "is_archived" bool DEFAULT false,
                          "deleted_at" timestamptz,
@@ -178,7 +179,7 @@ CREATE TABLE IF NOT EXISTS "media" (
                          "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
                          "owner_user_id" uuid NOT NULL,
                          "url" text NOT NULL,
-                         "type" media_type NOT NULL DEFAULT 'image',
+                         "type" media_type NOT NULL DEFAULT 'IMAGE',
                          "width" int,
                          "height" int,
                          "duration_seconds" int,
@@ -210,7 +211,7 @@ CREATE TABLE IF NOT EXISTS "reactions" (
                              "user_id" uuid NOT NULL,
                              "target_type" varchar(20) NOT NULL,
                              "target_id" uuid NOT NULL,
-                             "reaction" reaction_type NOT NULL DEFAULT 'like',
+                             "reaction" reaction_type NOT NULL DEFAULT 'LIKE',
                              "created_at" timestamptz DEFAULT (now())
 );
 

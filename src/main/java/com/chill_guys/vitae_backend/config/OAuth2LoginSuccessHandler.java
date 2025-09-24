@@ -2,6 +2,7 @@ package com.chill_guys.vitae_backend.config;
 
 import com.chill_guys.vitae_backend.user.UserService;
 import com.chill_guys.vitae_backend.user.model.entity.Role;
+import com.chill_guys.vitae_backend.util.IpResolver;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 
+import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -80,9 +82,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     ) {
         String access = jwtService.generateAccessToken(userId, Map.of("email", email, "roles", roles));
         var user = users.loadByEmailOrAccountName(email);
+        InetAddress ip = IpResolver.resolveInet(req);
         String opaqueRefresh = users.createRefreshToken(user,
                 req.getHeader("User-Agent"),
-                req.getRemoteAddr(),
+                ip,
                 null,
                 refreshTokenTtl
         );

@@ -12,12 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
 import java.security.SecureRandom;
 import java.time.OffsetDateTime;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -141,6 +139,8 @@ public class UserServiceImp implements UserService {
         return user;
     }
 
+
+
     @Override
     @Transactional
     public void touchLogin(UUID userId) {
@@ -192,9 +192,12 @@ public class UserServiceImp implements UserService {
      */
     @Override
     @Transactional
-    public String createRefreshToken(User user, String userAgent, String ip, String deviceId, long refreshTtlSeconds) {
+    public String createRefreshToken(User user, String userAgent, InetAddress ip, String deviceId, long refreshTtlSeconds) {
+        String secret = newSecret();
+        String secretHash = passwordEncoder.encode(secret);
         var session = UserSession.builder()
                 .user(user)
+                .refreshTokenHash(secretHash)
                 .userAgent(userAgent)
                 .ip(ip)
                 .deviceId(deviceId)
@@ -202,11 +205,6 @@ public class UserServiceImp implements UserService {
                 .validUntil(OffsetDateTime.now().plusSeconds(refreshTtlSeconds))
                 .build();
         session = userSessionRepository.save(session);
-
-        String secret = newSecret();
-        session.setRefreshTokenHash(secret);
-        userSessionRepository.save(session);
-
         return opaque(session.getId(), secret);
     }
 
@@ -226,7 +224,8 @@ public class UserServiceImp implements UserService {
         }
 
         String newSecret = newSecret();
-        session.setRefreshTokenHash(newSecret);
+        String newSecretHash = passwordEncoder.encode(newSecret);
+        session.setRefreshTokenHash(newSecretHash);
         session.setLastUsedAt(OffsetDateTime.now());
         session.setValidUntil(OffsetDateTime.now().plusSeconds(newRefreshTtlSeconds));
         userSessionRepository.save(session);

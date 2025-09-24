@@ -3,8 +3,10 @@ package com.chill_guys.vitae_backend.auth.model.entity;
 import com.chill_guys.vitae_backend.user.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
+import java.net.InetAddress;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -33,7 +35,8 @@ public class UserSession {
     private String userAgent;
 
     @Column(name = "ip")
-    private String ip;
+    @JdbcTypeCode(SqlTypes.INET)
+    private InetAddress ip;
 
     @Column(name = "device_id", length = 100)
     private String deviceId;

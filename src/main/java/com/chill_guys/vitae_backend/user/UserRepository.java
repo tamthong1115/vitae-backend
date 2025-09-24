@@ -1,6 +1,7 @@
 package com.chill_guys.vitae_backend.user;
 
 import com.chill_guys.vitae_backend.user.model.entity.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

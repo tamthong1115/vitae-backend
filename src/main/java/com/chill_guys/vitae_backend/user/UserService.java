@@ -1,6 +1,9 @@
 package com.chill_guys.vitae_backend.user;
 
 import com.chill_guys.vitae_backend.user.model.entity.User;
+
+import java.net.InetAddress;
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -22,7 +25,7 @@ public interface UserService {
     User getUserBySessionId(UUID sessionId);
 
     /** Create a new session and return the opaque refresh token: "<sessionId>.<secret>" */
-    String createRefreshToken(User user, String userAgent, String ip, String deviceId, long refreshTtlSeconds);
+    String createRefreshToken(User user, String userAgent, InetAddress ip, String deviceId, long refreshTtlSeconds);
 
     /** Validate an opaque refresh token, rotate its secret + extend validity, and return the NEW opaque token. */
     String rotateRefreshToken(String opaqueRefreshToken, long newRefreshTtlSeconds);

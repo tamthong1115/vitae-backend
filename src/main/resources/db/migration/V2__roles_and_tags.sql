@@ -48,7 +48,7 @@ ON CONFLICT (name) DO NOTHING;
 DO $$
     BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tag_kind') THEN
-            CREATE TYPE tag_kind AS ENUM ('topic','flair','content_warning');
+            CREATE TYPE tag_kind AS ENUM ('TOPIC','FLAIR','CONTENT_WARNING');
         END IF;
     END$$;
 
@@ -56,10 +56,10 @@ CREATE TABLE IF NOT EXISTS tags (
                                     id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
                                     slug          citext NOT NULL UNIQUE,     -- e.g. 'spoiler','nsfw','java','horror'
                                     display_name  varchar(64) NOT NULL,       -- human label
-                                    kind          tag_kind NOT NULL DEFAULT 'topic',
+                                    kind          tag_kind NOT NULL DEFAULT 'TOPIC',
                                     is_spoiler    boolean NOT NULL DEFAULT false, -- convenience flags
                                     is_nsfw       boolean NOT NULL DEFAULT false,  -- so you can filter quickly
-                                    color_hex     varchar(7),                      -- optional flair color like '#FF4500'
+                                    color_hex     varchar(7),                      -- optional FLAIR color like '#FF4500'
                                     created_at    timestamptz DEFAULT now(),
                                     updated_at    timestamptz DEFAULT now()
 );
@@ -96,13 +96,13 @@ CREATE INDEX IF NOT EXISTS idx_post_tags_tag  ON post_tags(tag_id);
 -- Seed common content-warning tags (Reddit-like)
 INSERT INTO tags (slug, display_name, kind, is_spoiler, is_nsfw)
 VALUES
-    ('spoiler','Spoiler','content_warning', true, false),
-    ('nsfw','NSFW','content_warning', false, true)
+    ('spoiler','Spoiler','CONTENT_WARNING', true, false),
+    ('nsfw','NSFW','CONTENT_WARNING', false, true)
 ON CONFLICT (slug) DO NOTHING;
 
--- Example: a generic "announcement" flair (colored)
+-- Example: a generic "announcement" FLAIR (colored)
 INSERT INTO tags (slug, display_name, kind, color_hex)
-VALUES ('announcement','Announcement','flair','#FF4500')
+VALUES ('announcement','Announcement','FLAIR','#FF4500')
 ON CONFLICT (slug) DO NOTHING;
 
 -- helper indexes for fast filtering of content warnings

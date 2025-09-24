@@ -6,6 +6,7 @@ import com.chill_guys.vitae_backend.user.model.dto.*;
 import com.chill_guys.vitae_backend.user.model.entity.Role;
 import com.chill_guys.vitae_backend.user.model.entity.User;
 import com.chill_guys.vitae_backend.user.model.mapper.UserMapper;
+import com.chill_guys.vitae_backend.util.IpResolver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.InetAddress;
 import java.util.Map;
 import java.util.UUID;
 
@@ -56,13 +58,17 @@ public class AuthController {
         try {
             authManager.authenticate(new UsernamePasswordAuthenticationToken(req.usernameOrEmail(), req.password()));
             var u = users.loadByEmailOrAccountName(req.usernameOrEmail());
+            if (u == null) {
+                throw new RuntimeException("Invalid credentials");
+            }
             users.touchLogin(u.getId());
 
             var claims = Map.of(
                     "roles", u.getRoles().stream().map(Role::getName).toList(),
                     "email", u.getEmail());
             String accessToken = jwt.generateAccessToken(u.getId().toString(), claims);
-            String refreshToken = users.createRefreshToken(u, httpReq.getHeader("User-Agent"), httpReq.getRemoteAddr(), req.deviceId(), refreshTokenTtl);
+            InetAddress ip = IpResolver.resolveInet(httpReq);
+            String refreshToken = users.createRefreshToken(u, httpReq.getHeader("User-Agent"), ip, req.deviceId(), refreshTokenTtl);
             return new TokenResponse(accessToken, refreshToken, u.getId().toString(), UserMapper.toDTO(u));
         } catch (Exception e) {
             throw new RuntimeException("Invalid credentials");
@@ -85,10 +91,12 @@ public class AuthController {
         users.touchLogin(u.getId());
 
         var claims = Map.of(
-                "roles", u.getRoles().stream().map(Role::getName).toList(),
-                "email", u.getEmail());
+                "roles", u.getRoles().stream().map(r -> r.getName().name()).toList(),
+                "email", u.getEmail()
+        );
         String accessToken = jwt.generateAccessToken(u.getId().toString(), claims);
-        String refreshToken = users.createRefreshToken(u, httpReq.getHeader("User-Agent"), httpReq.getRemoteAddr(), req.deviceId(), refreshTokenTtl);
+        InetAddress ip = IpResolver.resolveInet(httpReq);
+        String refreshToken = users.createRefreshToken(u, httpReq.getHeader("User-Agent"), ip, req.deviceId(), refreshTokenTtl);
         return new TokenResponse(accessToken, refreshToken, u.getId().toString(), UserMapper.toDTO(u));
 
     }

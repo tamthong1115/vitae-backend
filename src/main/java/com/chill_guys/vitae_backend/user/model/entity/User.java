@@ -11,6 +11,7 @@ import org.hibernate.type.SqlTypes;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
 import java.util.UUID;
 
 @Getter
@@ -63,7 +64,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
 

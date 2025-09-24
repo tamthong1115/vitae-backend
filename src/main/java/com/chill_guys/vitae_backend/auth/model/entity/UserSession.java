@@ -7,6 +7,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.net.InetAddress;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -37,6 +38,7 @@ public class UserSession {
     @Column(name = "ip")
     @JdbcTypeCode(SqlTypes.INET)
     private InetAddress ip;
+
 
     @Column(name = "device_id", length = 100)
     private String deviceId;
